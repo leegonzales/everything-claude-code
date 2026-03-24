@@ -8,7 +8,7 @@ origin: community
 
 Production-ready patterns for video and audio manipulation. Combines best practices from 9 community skills into one comprehensive reference.
 
-## When to Activate
+## When to Use
 
 - User wants to trim, cut, concat, or re-encode video/audio files
 - Converting between formats (MP4, WebM, ProRes, MKV, etc.)
@@ -16,6 +16,32 @@ Production-ready patterns for video and audio manipulation. Combines best practi
 - Extracting frames, generating GIFs, or creating thumbnails
 - Analyzing video quality (PSNR, SSIM, VMAF)
 - User says "ffmpeg", "transcode", "trim video", "convert video", or "compress video"
+
+## How It Works
+
+Production-ready FFmpeg/FFprobe command patterns organized by operation type:
+- **Probe & inspect** — extract metadata, duration, resolution, codecs
+- **Edit/transform** — trim, concat, convert, scale, effects, audio ops
+- **Delivery presets** — platform encoding (YouTube/Twitter/LinkedIn/IG), HLS streaming, quality metrics, hardware acceleration
+- **Automation** — batch processing, validation helpers, multi-platform export
+
+Use the section matching the user's goal, then adapt codec/container/filter flags to source constraints.
+
+## Examples
+
+```bash
+# Trim a clip (fast, stream copy)
+ffmpeg -ss 00:01:30 -to 00:02:45 -i input.mp4 -c copy output.mp4
+
+# Convert to web-friendly H.264
+ffmpeg -i input.avi -c:v libx264 -crf 23 -c:a aac -b:a 128k output.mp4
+
+# Concatenate clips (same codec)
+ffmpeg -f concat -safe 0 -i filelist.txt -c copy output.mp4
+
+# Extract audio
+ffmpeg -i video.mp4 -vn -c:a libmp3lame -q:a 2 audio.mp3
+```
 
 ## Prerequisites
 
@@ -315,7 +341,7 @@ ffmpeg -i input.mp4 -c:v libx264 -preset medium -crf 23 \
   -c:a aac -b:a 128k -t 140 -movflags +faststart twitter.mp4
 ```
 
-### LinkedIn (max 5GB, 10min, prefer 1080p)
+### LinkedIn (max 5GB, 10 min, prefer 1080p)
 ```bash
 ffmpeg -i input.mp4 -c:v libx264 -preset medium -crf 20 \
   -vf "scale=-2:1080" -c:a aac -b:a 192k \
